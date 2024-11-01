@@ -28,6 +28,8 @@ if ! echo "$message" | grep -qE "$required_pattern"; then
   echo "<ключевое слово>: <ТИП ЗАДАЧИ>-<номер задачи> <сообщение>"
   echo "Пример: feat: ITMS-123 Добавлена новая функция"
   echo ""
+  echo "Список ключевых слов: feat, fix, docs, style, refactor, perf, test, chore, build, other"
+  echo ""
   echo "Ваше сообщение коммита:"
   echo "$message"
   echo ""

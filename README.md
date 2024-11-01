@@ -1,50 +1,103 @@
-# React + TypeScript + Vite
+# [PROJECT NAME]
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+***
 
-Currently, two official plugins are available:
+## Установка проекта
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+### Установка менеджера пакетов pnpm
+```
+npm i -g pnpm
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react';
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-});
+### Установка зависимостей
 ```
+pnpm install
+```
+
+### Запуск проекта для разработки
+```
+pnpm dev
+```
+
+### Сборка проекта (production)
+```
+pnpm build
+```
+
+***
+
+## Работа над проектом
+
+### Именование веток
+Имя ветки должно начинаться с
+- feature/,
+- bugfix/,
+- hotfix/,
+- refactor/,
+- release/
+
+или быть в формате:
+```
+merge/develop<число>-develop<число>
+```
+
+### Оформление коммитов
+Сообщение коммита должно быть в формате:
+```
+<ключевое слово>: <ТИП ЗАДАЧИ>-<номер задачи> <сообщение>
+```
+
+Пример:
+```
+feat: [PROJECT NAME]-123 Добавлена новая функция
+```
+
+Для ветки **merge** требуется сообщение коммита в формате:
+```
+Merge branch [ваш текст]
+```
+
+> ***ВНИМАНИЕ:*** *Для получения дополнительной информации проверьте скрипт в .husky/commit-msg*
+
+### Ревью кода
+Merge request должен получить статус **approval** от другого разработчика на проекте. Только после этого может производиться слияние.
+
+### Доставки обновлений в develop/test/prod окружения
+**Стандартный цикл разработки:**
+1. Работа начинается с создания ветки develop от ветки master.
+2. В ветке develop хранится актуальный код.
+3. Напрямую сделать коммит в master или develop нельзя, все обновления заносятся через слияние (Merge Request).
+4. Для каждой задачи разработчик будет создавать новую ветку от develop.
+5. После выполнения задачи функциональность ветки сливается* с develop.
+6. Второй четверг спринта -- код-фриз, тестируется ветка develop. В это время в develop можно доставлять только исправления багов по текущей функциональности.
+7. После снятия код-фриза ветка develop вливается в release (test-стенд).
+8. Осуществляется тестирование ветки release (test-стенд).
+9. Если ветка стабильна, release (test-стенд) вливается в master (production-стенд), иначе повторяются шаги 6-9.
+10. Осуществляется тестирование ветки master (production-стенд).
+11. Если ветка стабильна, начинается новый цикл разработки, иначе создаётся hotfix.
+
+**Обработка hotfix:**
+1. Создаётся ветка hotfix от master (production-стенд).
+2. Вносятся правки.
+3. Ветка hotfix вливается в release (test-стенд).
+4. Осуществляется тестирование.
+5. Если ветка стабильна, release (test-стенд) вливается в master (production-стенд) и в develop, иначе повторяются шаги 2-5.
+6. Осуществляется тестирование ветки master (production-стенд).
+7. Если ветка стабильна, начинается новый цикл разработки, иначе повторяются шаги 1-7.
+
+> \* При слиянии можно использовать флаг [--no-ff](https://gearmobile.github.io/git/fast-forward-git/), который позволяет сохранить историю коммитов с учетом веток, даже если при слиянии история ветки develop не менялась
+
+
+> За основу взята модель [Git Flow](https://nvie.com/posts/a-successful-git-branching-model/)
+
+***
+
+## Технический стек
+- Vite,
+- Pnpm,
+- React + TypeScript,
+- SCSS.
+
+### Роутинг
+- React-router-dom,
+- React-router-typesafe-routes.
