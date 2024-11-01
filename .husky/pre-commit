@@ -1,0 +1,35 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "$branch" = "master" ] || [ "$branch" = "release" ] || [ "$branch" = "develop" ]; then
+  echo "Нельзя пушить напрямую в ветку $branch"
+  exit 1
+fi
+
+if echo "$branch" | grep -qE '^(feature|bugfix|hotfix|refactor|release)/'; then
+  echo "Имя ветки верное"
+elif echo "$branch" | grep -qE '^merge/develop[0-9]*-develop[0-9]*$'; then
+  echo "Имя ветки merge верное"
+else
+  echo "Неверное имя ветки"
+  echo "Имя ветки должно начинаться с feature/, bugfix/, hotfix/, refactor/, release/ или быть в формате merge/develop<число>-develop<число>"
+  exit 1
+fi
+
+echo "Запуск сборки проекта..."
+if ! pnpm build; then
+  echo "Сборка неуспешна, коммит отклонен"
+  exit 1
+fi
+
+echo "Сборка успешна, удаление папки dist"
+if ! rm -rf dist; then
+  echo "Не удалось удалить папку dist"
+  exit 1
+fi
+
+echo "Папка dist удалена, продолжение коммита"
+
+git rev-parse -q --no-revs --verify MERGE_HEAD || pnpm lint-staged

@@ -1,0 +1,36 @@
+#!/bin/sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+message="$(cat "$1")"
+required_pattern="^(feat|fix|docs|style|refactor|perf|test|chore|build|other): (ITMS)-[0-9]+|^Merge (branch|remote-tracking branch|pull request)"
+merge_branch_pattern="^Merge branch.*"
+
+# Проверка, является ли текущая ветка merge веткой
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+if echo "$current_branch" | grep -qE '^merge/develop[0-9]*-develop[0-9]*$'; then
+  if echo "$message" | grep -qE "$merge_branch_pattern"; then
+    exit 0
+  else
+    echo "Ошибка: Для ветки merge требуется сообщение коммита в формате 'Merge branch ...'"
+    echo "Ваше сообщение коммита:"
+    echo "$message"
+    exit 1
+  fi
+fi
+
+# Проверка, является ли сообщение коммита merge-коммитом
+if echo "$message" | grep -qE "^Merge "; then
+  exit 0
+fi
+
+if ! echo "$message" | grep -qE "$required_pattern"; then
+  echo "Неверный формат сообщения коммита. Сообщение коммита должно быть в формате:"
+  echo "<ключевое слово>: <ТИП ЗАДАЧИ>-<номер задачи> <сообщение>"
+  echo "Пример: feat: ITMS-123 Добавлена новая функция"
+  echo ""
+  echo "Ваше сообщение коммита:"
+  echo "$message"
+  echo ""
+  echo "Для получения дополнительной информации проверьте скрипт в .husky/commit-msg"
+  exit 1
+fi
