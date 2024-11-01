@@ -32,4 +32,4 @@ fi
 
 echo "Папка dist удалена, продолжение коммита"
 
-#git rev-parse -q --no-revs --verify MERGE_HEAD || pnpm lint-staged
+git rev-parse -q --no-revs --verify MERGE_HEAD || pnpm lint-staged
